@@ -23,5 +23,9 @@ urlToIframe resourceUrl oembedProviderUrl =
                 ++ Url.percentEncode
                     (oembedProviderUrl ++ "?url=" ++ resourceUrl)
             )
+        , Attr.width 500
+        , Attr.height 750
+        , Attr.attribute "border" "0"
+        , Attr.attribute "frameborder" "0"
         ]
         []

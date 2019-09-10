@@ -6,10 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode exposing (Decoder, field, string)
-
-
-
--- MAIN
+import Oembed
 
 
 main =
@@ -21,10 +18,6 @@ main =
         }
 
 
-
--- MODEL
-
-
 type Model
     = Failure
     | Loading
@@ -34,10 +27,6 @@ type Model
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Loading, getRandomCatGif )
-
-
-
--- UPDATE
 
 
 type Msg
@@ -60,17 +49,9 @@ update msg model =
                     ( Failure, Cmd.none )
 
 
-
--- SUBSCRIPTIONS
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
-
-
--- VIEW
 
 
 viewDocument : Model -> Browser.Document Msg
@@ -81,8 +62,17 @@ viewDocument model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h2 [] [ text "Random Cats" ]
-        , viewGif model
+        [ -- h2 [] [ text "Random Cats" ]
+          -- , viewGif model
+          div []
+            [ Oembed.view "https://www.youtube.com/watch?v=43eM4kNbb6c"
+                |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
+            , Oembed.view "https://twitter.com/dillontkearns/status/1105250778233491456"
+                |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
+            ]
+        , div []
+            [ text "This is below"
+            ]
         ]
 
 
