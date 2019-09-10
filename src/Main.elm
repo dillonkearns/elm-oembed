@@ -67,8 +67,10 @@ view model =
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
             , Oembed.view "https://twitter.com/dillontkearns/status/1105250778233491456"
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
-            , Oembed.view "https://giphy.com/services/oembed?url=https%3A%2F%2Fgiphy.com%2Fgifs%2Fcant-hardly-wait-kW8mnYSNkUYKc"
-                |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
+
+            -- , Oembed.view "https://giphy.com/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
+            , Oembed.view "https://giphy.com/gifs/cant-hardly-wait-kW8mnYSNkUYKc"
+                |> Maybe.withDefault (Html.text "Couldn't find GIPHY oembed provider.")
             ]
         , div []
             [ text "This is below"
@@ -102,9 +104,13 @@ viewGif model =
 getRandomCatGif : Cmd Msg
 getRandomCatGif =
     Http.get
-        { url = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
+        { url = "https://giphy.com/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
         , expect = Http.expectJson GotGif gifDecoder
         }
+
+
+
+-- https://giphy\\.com/gifs/.*
 
 
 gifDecoder : Decoder String
