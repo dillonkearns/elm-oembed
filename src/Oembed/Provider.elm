@@ -1,5 +1,6 @@
-module Oembed.Provider exposing (Provider, all)
+module Oembed.Provider exposing (Provider, all, lookup)
 
+import List.Extra
 import Regex exposing (Regex)
 
 
@@ -30,3 +31,14 @@ all =
       , url = "https://publish.twitter.com/oembed"
       }
     ]
+
+
+lookup : String -> Maybe String
+lookup inputUrl =
+    all
+        |> List.Extra.find
+            (\provider ->
+                provider.schemes
+                    |> List.any (\scheme -> Regex.contains scheme inputUrl)
+            )
+        |> Maybe.map .url
