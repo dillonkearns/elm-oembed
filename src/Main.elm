@@ -62,12 +62,12 @@ viewDocument model =
 view : Model -> Html Msg
 view model =
     div []
-        [ -- h2 [] [ text "Random Cats" ]
-          -- , viewGif model
-          div []
+        [ div []
             [ Oembed.view "https://www.youtube.com/watch?v=43eM4kNbb6c"
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
             , Oembed.view "https://twitter.com/dillontkearns/status/1105250778233491456"
+                |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
+            , Oembed.view "https://giphy.com/services/oembed?url=https%3A%2F%2Fgiphy.com%2Fgifs%2Fcant-hardly-wait-kW8mnYSNkUYKc"
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
             ]
         , div []
