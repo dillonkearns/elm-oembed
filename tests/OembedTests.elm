@@ -1,4 +1,4 @@
-module Example exposing (..)
+module OembedTests exposing (..)
 
 import Expect exposing (Expectation)
 import Oembed
