@@ -1,16 +1,27 @@
-module Oembed exposing (lookup)
+module Oembed exposing (view)
 
+import Html exposing (Html)
+import Html.Attributes as Attr
 import List.Extra
 import Oembed.Provider
 import Regex
+import Url
 
 
-lookup : String -> Maybe String
-lookup inputUrl =
-    Oembed.Provider.all
-        |> List.Extra.find
-            (\provider ->
-                provider.schemes
-                    |> List.any (\scheme -> Regex.contains scheme inputUrl)
+view : String -> Maybe (Html msg)
+view resourceUrl =
+    resourceUrl
+        |> Oembed.Provider.lookup
+        |> Maybe.map (urlToIframe resourceUrl)
+
+
+urlToIframe : String -> String -> Html msg
+urlToIframe resourceUrl oembedProviderUrl =
+    Html.iframe
+        [ Attr.src
+            ("https://oembed.netlify.com/?url="
+                ++ Url.percentEncode
+                    (oembedProviderUrl ++ "?url=" ++ resourceUrl)
             )
-        |> Maybe.map .url
+        ]
+        []
