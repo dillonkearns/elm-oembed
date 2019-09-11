@@ -40,9 +40,6 @@ customElements.define(
       xmlHttp.open("GET", apiUrl, false);
       xmlHttp.send(null);
       const response = JSON.parse(xmlHttp.responseText);
-      console.log('RESPONSE!', response);
-
-
 
       let iframe;
       switch (response.type) {
@@ -65,7 +62,6 @@ customElements.define(
 
           setTimeout(() => {
             if (!response.height) {
-              // console.log('VIDEO', iframe.contentWindow.document.body.scrollHeight + 110)
               shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollHeight + 10)
             }
             if (!response.width) {
@@ -108,10 +104,7 @@ function getDiscoverUrl(url) {
   xmlHttp.send(null);
   let dom = document.createElement('html')
   dom.innerHTML = xmlHttp.responseText;
-  // const response = JSON.parse(xmlHttp.responseText);
-  // console.log('RESPONSE!', response);
   const oembedUrl = dom.querySelector('link[type="application/json+oembed"]').href
-  // console.log('oembedUrl', oembedUrl)
   return oembedUrl;
 
 }
