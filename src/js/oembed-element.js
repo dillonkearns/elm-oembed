@@ -10,11 +10,21 @@ customElements.define(
     connectedCallback() {
       // console.log('url', this.getAttribute('url'));
       const urlAttr = this.getAttribute('url')
+      const maxwidth = this.getAttribute('maxwidth')
+      const maxheight = this.getAttribute('maxheight')
       console.log('url', urlAttr);
       let shadow = this.attachShadow({ mode: "closed" });
 
-      const apiUrl =
-        `https://cors-anywhere.herokuapp.com/${urlAttr}`
+      let apiUrl =
+      new URL(
+        `https://cors-anywhere.herokuapp.com/${urlAttr}`)
+        if (maxwidth) {
+          apiUrl.searchParams.set('maxwidth', maxwidth);
+        }
+        if (maxheight) {
+          apiUrl.searchParams.set('maxheight', maxheight);
+        }
+      apiUrl = apiUrl.toString()
       let xmlHttp = new XMLHttpRequest();
       xmlHttp.open("GET", apiUrl, false);
       xmlHttp.send(null);
@@ -38,7 +48,7 @@ customElements.define(
             shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollHeight + 10)
           }
           if (!response.width) {
-            shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollWidth + 10)
+            shadow.querySelector('iframe').setAttribute('width', iframe.contentWindow.document.body.scrollWidth + 10)
           }
         }, 1000)
           break;
@@ -46,6 +56,9 @@ customElements.define(
           console.log('PHOTO!', response);
           let img = document.createElement("img");
           img.setAttribute('src', response.url)
+          // img.setAttribute('max-width', maxwidth)
+          // img.setAttribute('max-height', maxheight)
+          img.setAttribute('style', `max-width: ${maxwidth}px; max-height: ${maxheight}px;`)
           shadow.appendChild(img)
         break;
         default:

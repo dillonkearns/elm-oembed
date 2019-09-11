@@ -18,35 +18,22 @@ main =
         }
 
 
-type Model
-    = Failure
-    | Loading
-    | Success String
+type alias Model =
+    ()
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( Loading, getRandomCatGif )
+    ( (), Cmd.none )
 
 
-type Msg
-    = MorePlease
-    | GotGif (Result Http.Error String)
+type alias Msg =
+    ()
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
-        MorePlease ->
-            ( Loading, getRandomCatGif )
-
-        GotGif result ->
-            case result of
-                Ok url ->
-                    ( Success url, Cmd.none )
-
-                Err _ ->
-                    ( Failure, Cmd.none )
+    ( model, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -56,65 +43,21 @@ subscriptions model =
 
 viewDocument : Model -> Browser.Document Msg
 viewDocument model =
-    { title = "Some cats", body = [ view model ] }
+    { title = "Oembed example gallery", body = [ view model ] }
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ Oembed.view "https://www.youtube.com/watch?v=43eM4kNbb6c"
+            [ Oembed.view Nothing "https://www.youtube.com/watch?v=43eM4kNbb6c"
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
-            , Oembed.view "https://twitter.com/dillontkearns/status/1105250778233491456"
+            , Oembed.view Nothing "https://twitter.com/dillontkearns/status/1105250778233491456"
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
-
-            -- , Oembed.view "https://giphy.com/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
-            , Oembed.view "https://giphy.com/services/oembed?url=https%3A%2F%2Fgiphy.com%2Fgifs%2Fcant-hardly-wait-kW8mnYSNkUYKc"
-                |> Maybe.withDefault (Html.text "Couldn't find GIPHY oembed provider.")
-            , Oembed.view "https://giphy.com/gifs/cant-hardly-wait-kW8mnYSNkUYKc"
+            , Oembed.view (Just { maxWidth = 250, maxHeight = 1000 }) "https://giphy.com/gifs/art-weird-ewan-26hiu3mZVquuykwhy"
                 |> Maybe.withDefault (Html.text "Couldn't find GIPHY oembed provider.")
             ]
         , div []
             [ text "This is below"
             ]
         ]
-
-
-viewGif : Model -> Html Msg
-viewGif model =
-    case model of
-        Failure ->
-            div []
-                [ text "I could not load a random cat for some reason. "
-                , button [ onClick MorePlease ] [ text "Try Again!" ]
-                ]
-
-        Loading ->
-            text "Loading..."
-
-        Success url ->
-            div []
-                [ button [ onClick MorePlease, style "display" "block" ] [ text "More Please!" ]
-                , img [ src url ] []
-                ]
-
-
-
--- HTTP
-
-
-getRandomCatGif : Cmd Msg
-getRandomCatGif =
-    Http.get
-        { url = "https://giphy.com/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat"
-        , expect = Http.expectJson GotGif gifDecoder
-        }
-
-
-
--- https://giphy\\.com/gifs/.*
-
-
-gifDecoder : Decoder String
-gifDecoder =
-    field "data" (field "image_url" string)
