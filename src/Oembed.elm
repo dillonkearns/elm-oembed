@@ -1,4 +1,7 @@
-module Oembed exposing (view, viewOrDiscover)
+module Oembed exposing
+    ( view, viewOrDiscover
+    , Provider
+    )
 
 {-|
 
@@ -20,6 +23,34 @@ Also note that it requires an additional HTTP request to fetch the HTML page and
 the Oembed API request based on that page's `<head>` tags.
 
 @docs view, viewOrDiscover
+
+
+## Custom Providers
+
+Explicitly looking up providers is preferrable to using Oembed Discovery because it:
+
+1.  Gives you a `Maybe` type which you can check for to see if anything went wrong, and
+2.  Doesn't require the extra HTTP request to do the Discovery.
+
+Here's an example of supplying a custom provider.
+
+    import Html
+    import Oembed exposing (Provider)
+    import Regex
+
+    customProviders : List Provider
+    customProviders =
+        [ { url = "https://ellie-app.com/oembed/"
+          , schemes =
+                [ Regex.fromString "https://ellie-app\\.com/.*" |> Maybe.withDefault Regex.never ]
+          }
+        ]
+
+    ellieView =
+        Oembed.view customProviders Nothing "https://ellie-app.com/4Xt4jdgtnZ2a1"
+            |> Maybe.withDefault (Html.text "Couldn't find oembed provider")
+
+@docs Provider
 
 -}
 
