@@ -1,21 +1,16 @@
 {
-  "name": "elm-oembed-provider",
+  "name": "elm-oembed",
   "version": "1.0.0",
-  "description": "elm-oembed",
+  "description": "A Custom Element and accompanying Elm package for displaying oembed content.",
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "rm -r dist && parcel build src/index.html --public-url ./",
     "test": "elm-test",
     "autotest": "elm-test --watch"
   },
   "author": "Dillon Kearns",
-  "license": "BSD-3",
+  "license": "BSD-3-Clause",
   "dependencies": {},
   "devDependencies": {
     "elm": "^0.19.0-no-deps",
-    "elm-hot": "^1.0.1",
-    "elm-test": "^0.19.0-rev6",
-    "node-elm-compiler": "^5.0.3",
-    "parcel-bundler": "^1.12.0"
+    "elm-test": "^0.19.0-rev6"
   }
 }
