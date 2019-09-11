@@ -17,15 +17,7 @@ view resourceUrl =
 
 urlToIframe : String -> String -> Html msg
 urlToIframe resourceUrl oembedProviderUrl =
-    Html.iframe
-        [ Attr.src
-            ("https://oembed.netlify.com/?url="
-                ++ Url.percentEncode
-                    (oembedProviderUrl ++ "?url=" ++ resourceUrl)
-            )
-        , Attr.width 500
-        , Attr.height 750
-        , Attr.attribute "border" "0"
-        , Attr.attribute "frameborder" "0"
+    Html.node "oembed-element"
+        [ Attr.attribute "url" (oembedProviderUrl ++ "?url=" ++ resourceUrl)
         ]
         []

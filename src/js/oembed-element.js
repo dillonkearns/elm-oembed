@@ -4,10 +4,17 @@ customElements.define(
   class extends HTMLElement {
     constructor() {
       super();
+
+    }
+
+    connectedCallback() {
+      // console.log('url', this.getAttribute('url'));
+      const urlAttr = this.getAttribute('url')
+      console.log('url', urlAttr);
       let shadow = this.attachShadow({ mode: "closed" });
 
       const apiUrl =
-        "https://cors-anywhere.herokuapp.com/https://publish.twitter.com/oembed?url=https%3A%2F%2Ftwitter.com%2Fdillontkearns%2Fstatus%2F1105250778233491456";
+        `https://cors-anywhere.herokuapp.com/${urlAttr}`
       let xmlHttp = new XMLHttpRequest();
       xmlHttp.open("GET", apiUrl, false);
       xmlHttp.send(null);
@@ -23,13 +30,16 @@ customElements.define(
 
       iframe.srcdoc = response.html;
       shadow.appendChild(iframe)
+
       setTimeout(() => {
-        shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollHeight + 10)
+        if (!response.height) {
+          shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollHeight + 10)
+        }
+        if (!response.width) {
+          shadow.querySelector('iframe').setAttribute('height', iframe.contentWindow.document.body.scrollWidth + 10)
+        }
       }, 1000)
 
-    }
-
-    connectedCallback() {
     }
   }
 );
