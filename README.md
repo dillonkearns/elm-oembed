@@ -21,3 +21,14 @@ div []
     , Oembed.viewOrDiscover Nothing "https://ellie-app.com/4Xt4jdgtnZ2a1"
     ]
 ```
+
+## Setup
+Just load the Web Component like so:
+
+```shell
+npm install --save-dev elm-oembed
+```
+
+```js
+import "elm-oembed";
+```
