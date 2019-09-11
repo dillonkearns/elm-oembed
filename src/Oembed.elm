@@ -27,8 +27,14 @@ import Html exposing (Html)
 import Html.Attributes as Attr
 import List.Extra
 import Oembed.Provider
-import Regex
+import Regex exposing (Regex)
 import Url
+
+
+type alias Provider =
+    { schemes : List Regex
+    , url : String
+    }
 
 
 {-| Look for an oembed provider in [the hardcoded list](https://oembed.com/#section7). If none is found,
@@ -37,10 +43,10 @@ that discovery will fail if the url passed in doesn't not link to a page
 that contains the `<link>` tag in the format used for discovery. So even
 though those doesn't return `Maybe (Html msg)`, it may fail to render oembed content.
 -}
-viewOrDiscover : Maybe { maxWidth : Int, maxHeight : Int } -> String -> Html msg
-viewOrDiscover options resourceUrl =
+viewOrDiscover : List Provider -> Maybe { maxWidth : Int, maxHeight : Int } -> String -> Html msg
+viewOrDiscover providers options resourceUrl =
     resourceUrl
-        |> view options
+        |> view providers options
         |> Maybe.withDefault (discover resourceUrl)
 
 
@@ -48,10 +54,10 @@ viewOrDiscover options resourceUrl =
 of oembed provider schemes. If none is found, it will return `Nothing`. Otherwise,
 you will have correctly rendered Oembed content (assuming no unexpected errors occur).
 -}
-view : Maybe { maxWidth : Int, maxHeight : Int } -> String -> Maybe (Html msg)
-view options resourceUrl =
+view : List Provider -> Maybe { maxWidth : Int, maxHeight : Int } -> String -> Maybe (Html msg)
+view customProviders options resourceUrl =
     resourceUrl
-        |> Oembed.Provider.lookup
+        |> Oembed.Provider.lookup customProviders
         |> Maybe.map (urlToIframe options resourceUrl)
 
 

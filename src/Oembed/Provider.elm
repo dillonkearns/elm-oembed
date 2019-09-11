@@ -1,12 +1,12 @@
-module Oembed.Provider exposing (Provider, all, lookup)
+module Oembed.Provider exposing (lookup)
 
 import List.Extra
 import Regex exposing (Regex)
 
 
-lookup : String -> Maybe String
-lookup inputUrl =
-    all
+lookup : List { schemes : List Regex, url : String } -> String -> Maybe String
+lookup customProviders inputUrl =
+    (customProviders ++ all)
         |> List.Extra.find
             (\provider ->
                 provider.schemes
