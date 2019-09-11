@@ -56,6 +56,7 @@ view model =
                 |> Maybe.withDefault (Html.text "Couldn't find oembed provider.")
             , Oembed.view (Just { maxWidth = 250, maxHeight = 1000 }) "https://giphy.com/gifs/art-weird-ewan-26hiu3mZVquuykwhy"
                 |> Maybe.withDefault (Html.text "Couldn't find GIPHY oembed provider.")
+            , Oembed.viewOrDiscover Nothing "https://ellie-app.com/4Xt4jdgtnZ2a1"
             ]
         , div []
             [ text "This is below"

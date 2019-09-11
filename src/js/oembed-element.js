@@ -8,16 +8,27 @@ customElements.define(
     }
 
     connectedCallback() {
-      // console.log('url', this.getAttribute('url'));
       const urlAttr = this.getAttribute('url')
-      const maxwidth = this.getAttribute('maxwidth')
-      const maxheight = this.getAttribute('maxheight')
-      console.log('url', urlAttr);
+      let maxwidth = null;
+      let maxheight = null;
+      let urlToEmbed;
+      if (urlAttr) {
+        urlToEmbed = urlAttr;
+        maxwidth = this.getAttribute('maxwidth')
+        maxheight = this.getAttribute('maxheight')
+      } else {
+        const discoverUrl = this.getAttribute('discover-url')
+        if (discoverUrl) {
+          const discoveredUrl = getDiscoverUrl(discoverUrl);
+          urlToEmbed = discoveredUrl;
+        }
+      }
+
       let shadow = this.attachShadow({ mode: "closed" });
 
       let apiUrl =
       new URL(
-        `https://cors-anywhere.herokuapp.com/${urlAttr}`)
+        `https://cors-anywhere.herokuapp.com/${urlToEmbed}`)
         if (maxwidth) {
           apiUrl.searchParams.set('maxwidth', maxwidth);
         }
@@ -86,4 +97,21 @@ function createIframe(response) {
   iframe.setAttribute('width', (response.width || 500) + 20)
   iframe.srcdoc = response.html;
   return iframe;
+}
+
+function getDiscoverUrl(url) {
+  let apiUrl = new URL(
+    `https://cors-anywhere.herokuapp.com/${url}`)
+  apiUrl = apiUrl.toString()
+  let xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", apiUrl, false);
+  xmlHttp.send(null);
+  let dom = document.createElement('html')
+  dom.innerHTML = xmlHttp.responseText;
+  // const response = JSON.parse(xmlHttp.responseText);
+  // console.log('RESPONSE!', response);
+  const oembedUrl = dom.querySelector('link[type="application/json+oembed"]').href
+  // console.log('oembedUrl', oembedUrl)
+  return oembedUrl;
+
 }
