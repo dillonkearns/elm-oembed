@@ -1,4 +1,4 @@
-import "./oembed-element.js";
+import "../../../index.js";
 import { Elm } from "../Main.elm";
 
 Elm.Main.init({
