@@ -2,6 +2,9 @@
 
 A Web Component and accompanying Elm package for rendering [oembed content](https://oembed.com).
 
+Width and height are sized dynamically based on the loaded content. Script tags are
+safely loaded within an `iframe`.
+
 ## What is oembed
 
 [`oembed` is a protocol](https://oembed.com), with [many providers implementing it](https://oembed.com/#section7).
