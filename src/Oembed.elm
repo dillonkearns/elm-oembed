@@ -19,6 +19,8 @@ use `Oembed.view`, but `Oembed.discover` is provided to explicitly.
 Also note that it requires an additional HTTP request to fetch the HTML page and process before it makes
 the Oembed API request based on that page's `<head>` tags.
 
+@docs view, viewOrDiscover
+
 -}
 
 import Html exposing (Html)
