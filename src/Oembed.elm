@@ -62,6 +62,9 @@ import Regex exposing (Regex)
 import Url
 
 
+{-| `elm-oembed` has a default list of providers from [the official list](https://github.com/iamcal/oembed/tree/master/providers).
+You can add custom ones (see the above section in this docs page).
+-}
 type alias Provider =
     { schemes : List Regex
     , url : String

@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "dillonkearns/elm-oembed",
-    "summary": "A Custom Element and accompanying Elm package for displaying oembed content.",
+    "summary": "Embed Tweets, YouTube videos, Ellies, and more with a Custom Element.",
     "license": "BSD-3-Clause",
     "version": "1.0.0",
     "exposed-modules": [
