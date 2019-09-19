@@ -1,5 +1,8 @@
 # `elm-oembed`
 
+[![Elm package](https://img.shields.io/elm-package/v/dillonkearns/elm-graphql.svg)](https://package.elm-lang.org/packages/dillonkearns/elm-graphql/latest/)
+[![npm](https://img.shields.io/npm/v/@dillonkearns/elm-graphql.svg)](https://npmjs.com/package/@dillonkearns/elm-graphql)
+
 A Web Component and accompanying Elm package for rendering [oembed content](https://oembed.com).
 
 Width and height are sized dynamically based on the loaded content. Script tags are
