@@ -4,7 +4,6 @@ customElements.define(
     connectedCallback() {
       let shadow = this.attachShadow({ mode: "closed" });
       const urlAttr = this.getAttribute("url");
-      let urlToEmbed;
       if (urlAttr) {
         renderOembed(shadow, urlAttr, {
           maxwidth: this.getAttribute("maxwidth"),
@@ -13,10 +12,8 @@ customElements.define(
       } else {
         const discoverUrl = this.getAttribute("discover-url");
         if (discoverUrl) {
-          const discoveredUrl = getDiscoverUrl(discoverUrl, function(
-            discoveredUrl
-          ) {
-            renderOembed(shadow, discoveredUrl);
+          getDiscoverUrl(discoverUrl, function(discoveredUrl) {
+            renderOembed(shadow, discoveredUrl, null);
           });
         }
       }
@@ -24,19 +21,27 @@ customElements.define(
   }
 );
 
+/**
+ *
+ * @param {ShadowRoot} shadow
+ * @param {string} urlToEmbed
+ * @param {{maxwidth: string?; maxheight: string?}?} options
+ */
 function renderOembed(shadow, urlToEmbed, options) {
-  let apiUrl = new URL(`https://cors-anywhere.herokuapp.com/${urlToEmbed}`);
+  let apiUrlBuilder = new URL(
+    `https://cors-anywhere.herokuapp.com/${urlToEmbed}`
+  );
   if (options && options.maxwidth) {
-    apiUrl.searchParams.set("maxwidth", options.maxwidth);
+    apiUrlBuilder.searchParams.set("maxwidth", options.maxwidth);
   }
   if (options && options.maxheight) {
-    apiUrl.searchParams.set("maxheight", options.maxheight);
+    apiUrlBuilder.searchParams.set("maxheight", options.maxheight);
   }
-  apiUrl = apiUrl.toString();
-  httpGetAsync(apiUrl, rawResponse => {
-    response = JSON.parse(rawResponse);
+  const apiUrl = apiUrlBuilder.toString();
+  httpGetAsync(apiUrl, (/** @type {Object} */ rawResponse) => {
+    const response = JSON.parse(rawResponse);
 
-    let iframe;
+    /** @type {HTMLIFrameElement} */ let iframe;
     switch (response.type) {
       case "rich":
         iframe = createIframe(response);
@@ -101,19 +106,25 @@ function renderOembed(shadow, urlToEmbed, options) {
   });
 }
 
+/**
+ * @param {{ height: number?; width: number?; html: string; }} response
+ */
 function createIframe(response) {
   let iframe = document.createElement("iframe");
   iframe.setAttribute("border", "0");
   iframe.setAttribute("frameborder", "0");
-  iframe.setAttribute("height", (response.height || 500) + 20);
-  iframe.setAttribute("width", (response.width || 500) + 20);
+  iframe.setAttribute("height", ((response.height || 500) + 20).toString());
+  iframe.setAttribute("width", ((response.width || 500) + 20).toString());
   iframe.srcdoc = response.html;
   return iframe;
 }
 
+/**
+ * @param {string} url
+ * @param {{ (discoveredUrl: string): void;}} callback
+ */
 function getDiscoverUrl(url, callback) {
-  let apiUrl = new URL(`https://cors-anywhere.herokuapp.com/${url}`);
-  apiUrl = apiUrl.toString();
+  let apiUrl = new URL(`https://cors-anywhere.herokuapp.com/${url}`).toString();
   httpGetAsync(apiUrl, function(response) {
     let dom = document.createElement("html");
     dom.innerHTML = response;
@@ -123,6 +134,10 @@ function getDiscoverUrl(url, callback) {
   });
 }
 
+/**
+ * @param {string} theUrl
+ * @param {{ (rawResponse: string): void }} callback
+ */
 function httpGetAsync(theUrl, callback) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.onreadystatechange = function() {
