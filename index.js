@@ -13,7 +13,9 @@ customElements.define(
         const discoverUrl = this.getAttribute("discover-url");
         if (discoverUrl) {
           getDiscoverUrl(discoverUrl, function(discoveredUrl) {
-            renderOembed(shadow, discoveredUrl, null);
+            if (discoveredUrl) {
+              renderOembed(shadow, discoveredUrl, null);
+            }
           });
         }
       }
@@ -38,7 +40,7 @@ function renderOembed(shadow, urlToEmbed, options) {
     apiUrlBuilder.searchParams.set("maxheight", options.maxheight);
   }
   const apiUrl = apiUrlBuilder.toString();
-  httpGetAsync(apiUrl, (/** @type {Object} */ rawResponse) => {
+  httpGetAsync(apiUrl, rawResponse => {
     const response = JSON.parse(rawResponse);
 
     /** @type {HTMLIFrameElement} */ let iframe;
@@ -48,21 +50,18 @@ function renderOembed(shadow, urlToEmbed, options) {
         shadow.appendChild(iframe);
 
         setTimeout(() => {
-          if (!response.height) {
-            shadow
-              .querySelector("iframe")
-              .setAttribute(
-                "height",
-                iframe.contentWindow.document.body.scrollHeight + 10
-              );
+          let refetchedIframe = shadow.querySelector("iframe");
+          if (refetchedIframe && !response.height) {
+            refetchedIframe.setAttribute(
+              "height",
+              (iframe.contentWindow.document.body.scrollHeight + 10).toString()
+            );
           }
-          if (!response.width) {
-            shadow
-              .querySelector("iframe")
-              .setAttribute(
-                "width",
-                iframe.contentWindow.document.body.scrollWidth + 10
-              );
+          if (refetchedIframe && !response.width) {
+            refetchedIframe.setAttribute(
+              "width",
+              (iframe.contentWindow.document.body.scrollWidth + 10).toString()
+            );
           }
         }, 1000);
         break;
@@ -121,16 +120,17 @@ function createIframe(response) {
 
 /**
  * @param {string} url
- * @param {{ (discoveredUrl: string): void;}} callback
+ * @param {{ (discoveredUrl: string?): void;}} callback
  */
 function getDiscoverUrl(url, callback) {
   let apiUrl = new URL(`https://cors-anywhere.herokuapp.com/${url}`).toString();
   httpGetAsync(apiUrl, function(response) {
     let dom = document.createElement("html");
     dom.innerHTML = response;
-    const oembedUrl = dom.querySelector('link[type="application/json+oembed"]')
-      .href;
-    callback(oembedUrl);
+    /** @type {HTMLLinkElement | null} */ const oembedTag = dom.querySelector(
+      'link[type="application/json+oembed"]'
+    );
+    callback(oembedTag && oembedTag.href);
   });
 }
 
