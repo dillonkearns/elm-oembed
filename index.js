@@ -43,50 +43,12 @@ function renderOembed(shadow, urlToEmbed, options) {
   httpGetAsync(apiUrl, rawResponse => {
     const response = JSON.parse(rawResponse);
 
-    /** @type {HTMLIFrameElement} */ let iframe;
     switch (response.type) {
       case "rich":
-        iframe = createIframe(response);
-        shadow.appendChild(iframe);
-
-        setTimeout(() => {
-          let refetchedIframe = shadow.querySelector("iframe");
-          if (refetchedIframe && !response.height) {
-            refetchedIframe.setAttribute(
-              "height",
-              (iframe.contentWindow.document.body.scrollHeight + 10).toString()
-            );
-          }
-          if (refetchedIframe && !response.width) {
-            refetchedIframe.setAttribute(
-              "width",
-              (iframe.contentWindow.document.body.scrollWidth + 10).toString()
-            );
-          }
-        }, 1000);
+        tryRenderingHtml(shadow, response);
         break;
       case "video":
-        iframe = createIframe(response);
-        shadow.appendChild(iframe);
-
-        setTimeout(() => {
-          if (!response.height) {
-            shadow
-              .querySelector("iframe")
-              .setAttribute(
-                "height",
-                iframe.contentWindow.document.body.scrollHeight + 10
-              );
-          }
-          if (!response.width) {
-            shadow
-              .querySelector("iframe")
-              .setAttribute(
-                "width",
-                iframe.contentWindow.document.body.scrollWidth + 10
-              );
-          }
-        }, 1000);
+        tryRenderingHtml(shadow, response);
         break;
       case "photo":
         let img = document.createElement("img");
@@ -106,7 +68,40 @@ function renderOembed(shadow, urlToEmbed, options) {
 }
 
 /**
+ * @param {{
+    height: ?number;
+    width: ?number;
+    html: any;
+}} response
+ * @param {ShadowRoot} shadow
+ */
+function tryRenderingHtml(shadow, response) {
+  if (response && typeof response.html) {
+    let iframe = createIframe(response);
+    shadow.appendChild(iframe);
+    setTimeout(() => {
+      let refetchedIframe = shadow.querySelector("iframe");
+      if (refetchedIframe && !response.height) {
+        refetchedIframe.setAttribute(
+          "height",
+          // @ts-ignore
+          (iframe.contentWindow.document.body.scrollHeight + 10).toString()
+        );
+      }
+      if (refetchedIframe && !response.width) {
+        refetchedIframe.setAttribute(
+          "width",
+          // @ts-ignore
+          (iframe.contentWindow.document.body.scrollWidth + 10).toString()
+        );
+      }
+    }, 1000);
+  }
+}
+
+/**
  * @param {{ height: number?; width: number?; html: string; }} response
+ * @returns {HTMLIFrameElement}
  */
 function createIframe(response) {
   let iframe = document.createElement("iframe");
