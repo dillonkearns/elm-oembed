@@ -1,6 +1,6 @@
 {
   "name": "elm-oembed",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A Custom Element and accompanying Elm package for displaying oembed content.",
   "scripts": {
     "test": "elm-test",
