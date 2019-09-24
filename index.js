@@ -109,6 +109,7 @@ function createIframe(response) {
   iframe.setAttribute("frameborder", "0");
   iframe.setAttribute("height", ((response.height || 500) + 20).toString());
   iframe.setAttribute("width", ((response.width || 500) + 20).toString());
+  iframe.setAttribute("max-width", "100%");
   iframe.srcdoc = response.html;
   return iframe;
 }
