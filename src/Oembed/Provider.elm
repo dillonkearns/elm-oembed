@@ -1,7 +1,14 @@
-module Oembed.Provider exposing (lookup)
+module Oembed.Provider exposing (hardcodedMatches, lookup)
 
 import List.Extra
 import Regex exposing (Regex)
+
+
+hardcodedMatches : String -> Bool
+hardcodedMatches inputUrl =
+    lookup [] inputUrl
+        |> Maybe.map (\_ -> True)
+        |> Maybe.withDefault False
 
 
 lookup : List { schemes : List Regex, url : String } -> String -> Maybe String
