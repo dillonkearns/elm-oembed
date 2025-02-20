@@ -3,10 +3,9 @@
     "name": "dillonkearns/elm-oembed",
     "summary": "Embed Tweets, YouTube videos, Ellies, and more with a Custom Element.",
     "license": "BSD-3-Clause",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "exposed-modules": [
-        "Oembed",
-        "Oembed.Provider"
+        "Oembed"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {

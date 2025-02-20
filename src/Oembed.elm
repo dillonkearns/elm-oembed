@@ -1,5 +1,5 @@
 module Oembed exposing
-    ( view, viewOrDiscover
+    ( view, viewOrDiscover, matchesDefaultProviders
     , Provider
     )
 
@@ -22,7 +22,7 @@ use `Oembed.view`, but `Oembed.discover` is provided to explicitly.
 Also note that it requires an additional HTTP request to fetch the HTML page and process before it makes
 the Oembed API request based on that page's `<head>` tags.
 
-@docs view, viewOrDiscover
+@docs view, viewOrDiscover, matchesDefaultProviders
 
 
 ## Custom Providers
@@ -56,10 +56,8 @@ Here's an example of supplying a custom provider.
 
 import Html exposing (Html)
 import Html.Attributes as Attr
-import List.Extra
 import Oembed.Provider
 import Regex exposing (Regex)
-import Url
 
 
 {-| `elm-oembed` has a default list of providers from [the official list](https://github.com/iamcal/oembed/tree/master/providers).
@@ -93,6 +91,14 @@ view customProviders options resourceUrl =
     resourceUrl
         |> Oembed.Provider.lookup customProviders
         |> Maybe.map (urlToIframe options resourceUrl)
+
+
+{-| Check if the passed in url matches any provider in [the hardcoded list](https://oembed.com/#section7)
+of oembed provider schemes.
+-}
+matchesDefaultProviders : String -> Bool
+matchesDefaultProviders inputUrl =
+    Oembed.Provider.lookup [] inputUrl /= Nothing
 
 
 discover : String -> Html msg

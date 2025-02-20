@@ -1,6 +1,6 @@
 module ProviderTests exposing (..)
 
-import Expect exposing (Expectation)
+import Expect
 import Oembed.Provider
 import Test exposing (..)
 
