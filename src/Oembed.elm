@@ -1,5 +1,5 @@
 module Oembed exposing
-    ( view, viewOrDiscover, matchesDefaultProviders
+    ( view, viewOrDiscover, matchesDefaultProvider
     , Provider
     )
 
@@ -22,7 +22,7 @@ use `Oembed.view`, but `Oembed.discover` is provided to explicitly.
 Also note that it requires an additional HTTP request to fetch the HTML page and process before it makes
 the Oembed API request based on that page's `<head>` tags.
 
-@docs view, viewOrDiscover, matchesDefaultProviders
+@docs view, viewOrDiscover, matchesDefaultProvider
 
 
 ## Custom Providers
@@ -96,8 +96,8 @@ view customProviders options resourceUrl =
 {-| Check if the passed in url matches any provider in [the hardcoded list](https://oembed.com/#section7)
 of oembed provider schemes.
 -}
-matchesDefaultProviders : String -> Bool
-matchesDefaultProviders inputUrl =
+matchesDefaultProvider : String -> Bool
+matchesDefaultProvider inputUrl =
     Oembed.Provider.lookup [] inputUrl /= Nothing
 
 
