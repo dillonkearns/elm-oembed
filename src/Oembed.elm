@@ -95,6 +95,11 @@ view customProviders options resourceUrl =
 
 {-| Check if the passed in url matches any provider in [the hardcoded list](https://oembed.com/#section7)
 of oembed provider schemes.
+
+Usage example: if you want to display a preview (thumbnail) of the link and only show
+the embedded content after the user clicks the thumbnail,
+you need to know if the link is embeddable at all, otherwise you may want to display a plain link.
+
 -}
 matchesDefaultProvider : String -> Bool
 matchesDefaultProvider inputUrl =
