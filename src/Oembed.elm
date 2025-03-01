@@ -1,6 +1,7 @@
 module Oembed exposing
-    ( view, viewOrDiscover, matchesDefaultProvider
+    ( view, viewOrDiscover
     , Provider
+    , matchesProvider
     )
 
 {-|
@@ -94,16 +95,30 @@ view customProviders options resourceUrl =
 
 
 {-| Check if the passed in url matches any provider in [the hardcoded list](https://oembed.com/#section7)
-of oembed provider schemes.
+of oembed provider schemes or a custom one.
 
 Usage example: if you want to display a preview (thumbnail) of the link and only show
 the embedded content after the user clicks the thumbnail,
-you need to know if the link is embeddable at all, otherwise you may want to display a plain link.
+you need to know in advance if the link is embeddable at all, otherwise you may want to display a plain link.
+
+    isEmbeddable : String -> Bool
+    isEmbeddable urlString =
+        Oembed.matchesProvider [] urlString
+
+
+    viewLink : String -> List (Html msg) -> Html msg
+    viewLink urlString body =
+        if isEmbeddable urlString then
+            -- generate preview / embedded content
+
+        else
+            -- plain link
+            a [ href urlString ] body
 
 -}
-matchesDefaultProvider : String -> Bool
-matchesDefaultProvider inputUrl =
-    Oembed.Provider.lookup [] inputUrl /= Nothing
+matchesProvider : List Provider -> String -> Bool
+matchesProvider customProviders inputUrl =
+    Oembed.Provider.lookup customProviders inputUrl /= Nothing
 
 
 discover : String -> Html msg

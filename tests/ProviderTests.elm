@@ -19,14 +19,14 @@ suite =
                 "https://www.youtube.com/watch?v=43eM4kNbb6c"
                     |> Oembed.Provider.lookup []
                     |> Expect.equal (Just "https://www.youtube.com/oembed")
-        , test "matchesDefaultProvider finds Soundcloud" <|
+        , test "matchesProvider finds Soundcloud" <|
             \_ ->
                 "https://soundcloud.com/trang-phan-th-491539371/amore-mio-elm-la-mix-mp3"
-                    |> Oembed.matchesDefaultProvider
+                    |> Oembed.matchesProvider []
                     |> Expect.equal True
-        , test "matchesDefaultProvider doesn't find X" <|
+        , test "matchesProvider doesn't find X" <|
             \_ ->
                 "https://x.com/elmlang"
-                    |> Oembed.matchesDefaultProvider
+                    |> Oembed.matchesProvider []
                     |> Expect.equal False
         ]
